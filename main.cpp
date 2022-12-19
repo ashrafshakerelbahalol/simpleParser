@@ -13,14 +13,14 @@ class parser{
 	private:
 		ifstream f; // s =1
 		token curr_token;
-//***************************************
+
 		token check_reserved (string s){
 			if (s=="int") return int_symbol;
             else if (s=="float") return float_symbol;
 			else if (s=="cout") return cout_symbol;
 			else return id;
 		}
-//******************************************
+
 		token get_token(){
 
 			char ch;
@@ -83,7 +83,7 @@ class parser{
 							return check_reserved(s);
 						}
 						break;
-//<<
+
 					case 5:
 						f.get(ch);
 						if(ch=='<') return cout_op_sy;
@@ -113,7 +113,7 @@ class parser{
 			}
 			return end_source_sy;
 		}
-//****************************************
+
 
 	string name(token t){
 
@@ -138,7 +138,7 @@ class parser{
 
 		return "error token";
 	}
-//****************************************
+
 
 	public:
 
