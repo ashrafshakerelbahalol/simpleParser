@@ -145,8 +145,8 @@ class parser{
 			case error_symbol: return "error token";break;
             case equal_symbol: return "equal token";break;
             case semicolon_symbol: return "semicolon token";break;
-            case lcurly_bracket: return "left curlybracket token";break;
-            case rcurly_bracket: return "right curlybracket token";break;
+            case lcurly_bracket: return "left curly bracket token";break;
+            case rcurly_bracket: return "right curly bracket token";break;
 			case end_source_symbol: return "End of file";break;
 
 		}
@@ -188,10 +188,9 @@ class parser{
             match (lcurly_bracket);
 			program();
 			match(end_source_symbol);
-
 		}
 
-		//<program> ::= int  id  = <expr-seq> ;|  cout  << <expr-seq> ;| int  id  = <expr-seq>;
+		//<program> ::= int  id  = <expr-seq> ;|  cout  << <expr-seq> ;| float  id  = <expr-seq>;
 
 		void program(){
 			if(curr_token == int_symbol){
