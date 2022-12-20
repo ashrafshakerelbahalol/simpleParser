@@ -241,7 +241,7 @@ class parser{
 			}
 		}
 
-		//<expr>    ::= <id>|<num> | <real> |  ( + <expr-seq>) | ( * <expr-seq>)
+		//<expr>    ::= <id>|<num> |  (  <num> + <num>) |  (  <num> * <num>)
 
 		void expr(){
 
