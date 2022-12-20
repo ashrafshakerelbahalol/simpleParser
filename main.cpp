@@ -49,7 +49,7 @@ class parser{
                         else if (ch==';')  state = 11;
                         else if (ch=='{')  state = 12;
                         else if (ch=='}')  state = 13;
-						else state = 12;
+						else state = 14;
 						break;
                      //(1) 12.(3) 3
 					case 1:
