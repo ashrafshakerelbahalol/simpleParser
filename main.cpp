@@ -162,7 +162,7 @@ class parser{
 			f.open(filename.c_str());
 		}
 
-		~parser(){
+		void closefile (){
 			f.close();
 		}
 		void match(token terminal){
@@ -225,6 +225,7 @@ class parser{
                 program();
 			}
             else if(curr_token == rcurly_bracket){
+                cout<<"*****************************************************"<<endl;
                 match(rcurly_bracket);
 
             }
@@ -286,5 +287,5 @@ int main()
     string name ="input.txt";
     parser p(name);
     p.sample_parser();
-    p.~parser();
+    p.closefile();
 }
