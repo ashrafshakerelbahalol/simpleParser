@@ -226,7 +226,7 @@ class parser{
 			}
             else if(curr_token == rcurly_bracket){
                 match(rcurly_bracket);
-                match(end_source_symbol);
+
             }
 			else
 				syntax_error(curr_token);
