@@ -236,7 +236,7 @@ class parser{
 
 		void expr_seq(){
 			expr();
-			while(curr_token == id || curr_token == num ||  curr_token == lparn_symbol || curr_token == rparn_symbol ||  curr_token == Addop || curr_token == multop  ){
+			while(curr_token == id || curr_token == num ||  curr_token == lparn_symbol || curr_token == rparn_symbol   ){
 				expr();
 			}
 		}
@@ -255,18 +255,18 @@ class parser{
 						if (curr_token==Addop){
                         match (Addop);
                             match(num);
-						match(rparn_symbol);
+
                         }
                         else if (curr_token == multop ){
                             match (multop);
                             match(num);
-                            match(rparn_symbol);
+
                         }
 					}
                     else{
 						syntax_error(curr_token);
 					}
-                    break;
+
                 case rparn_symbol:
                     match (rparn_symbol);
 					break;
