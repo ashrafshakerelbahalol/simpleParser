@@ -254,18 +254,19 @@ class parser{
                         match(num);
 						if (curr_token==Addop){
                         match (Addop);
-						expr_seq();
+                            match(num);
 						match(rparn_symbol);
                         }
                         else if (curr_token == multop ){
                             match (multop);
-                            expr_seq();
+                            match(num);
                             match(rparn_symbol);
                         }
 					}
                     else{
 						syntax_error(curr_token);
 					}
+                    break;
                 case rparn_symbol:
                     match (rparn_symbol);
 					break;
