@@ -5,7 +5,8 @@
 using namespace std;
 
 enum token{
-	int_symbol, float_symbol , cout_symbol,  cout_op_sy, lparn_sy , rparn_sy , Addop , multop , id , num , error_sy , end_source_sy , equal_symbol
+	int_symbol, float_symbol , cout_symbol,  cout_op_symbol, lparn_symbol , rparn_symbol , Addop , multop , id , num , error_symbol , end_source_symbol , equal_symbol,semicolon_symbol,
+    void_symbol,lcurly_bracket,rcurly_bracket
 };
 
 class parser{
@@ -18,6 +19,7 @@ class parser{
 			if (s=="int") return int_symbol;
             else if (s=="float") return float_symbol;
 			else if (s=="cout") return cout_symbol;
+            else if (s=="void") return void_symbol;
 			else return id;
 		}
 
@@ -28,12 +30,12 @@ class parser{
 			int state = 0;
 
 
-			while(state>=0 && state <=11 && !f.eof()){
+			while(state>=0 && state <=14 && !f.eof()){
 
 				switch(state){
 					case 0:
 						f.get(ch);//int
-						if (f.eof()) return end_source_sy;
+						if (f.eof()) return end_source_symbol;
 						else if (isspace(ch)) {s=ch; state = 0;}
 						else if (isdigit(ch)) {s=ch; state = 1;}
 						else if (ch=='.') {s=ch; state = 2;}
@@ -44,7 +46,10 @@ class parser{
 						else if (ch=='(') state = 8;
 						else if (ch==')') state = 9;
                         else if (ch=='=')  state = 10;
-						else state = 11;
+                        else if (ch==';')  state = 11;
+                        else if (ch=='{')  state = 12;
+                        else if (ch=='}')  state = 13;
+						else state = 12;
 						break;
                      //(1) 12.(3) 3
 					case 1:
@@ -86,8 +91,8 @@ class parser{
 
 					case 5:
 						f.get(ch);
-						if(ch=='<') return cout_op_sy;
-						else return error_sy;
+						if(ch=='<') return cout_op_symbol;
+						else return error_symbol;
 						break;
 
 
@@ -99,19 +104,25 @@ class parser{
 						return multop; break;
 
 					case 8:
-						return lparn_sy; break;
+						return lparn_symbol; break;
 
 					case 9:
-						return rparn_sy; break;
+						return rparn_symbol; break;
                     case 10:
                         return equal_symbol; break;
-					case 11:
-						return error_sy; break;
+                    case 11:
+                        return semicolon_symbol; break;
+                    case 12:
+                        return lcurly_bracket; break;
+                    case 13:
+                        return rcurly_bracket; break;
+					case 14:
+						return error_symbol; break;
 
 
 				}
 			}
-			return end_source_sy;
+			return end_source_symbol;
 		}
 
 
@@ -121,18 +132,22 @@ class parser{
 
 
 			case cout_symbol: return "cout token";break;
-			case cout_op_sy: return "<< token";break;
+			case cout_op_symbol: return "<< token";break;
+            case void_symbol: return "void token";break;
 			case id: return "identifier";break;
 			case int_symbol: return "int token";break;
             case float_symbol: return "float token";break;
 			case num: return "num token";break;
 			case Addop: return "+ or - token";break;
 			case multop : return "* or / token";break;
-			case lparn_sy: return "( token";break;
-			case rparn_sy: return ") token";break;
-			case error_sy: return "error token";break;
+			case lparn_symbol: return "( token";break;
+			case rparn_symbol: return ") token";break;
+			case error_symbol: return "error token";break;
             case equal_symbol: return "equal token";break;
-			case end_source_sy: return "End of file";break;
+            case semicolon_symbol: return "semicolon token";break;
+            case lcurly_bracket: return "left curlybracket token";break;
+            case rcurly_bracket: return "right curlybracket token";break;
+			case end_source_symbol: return "End of file";break;
 
 		}
 
@@ -166,37 +181,52 @@ class parser{
 
 		void sample_parser(){
 			curr_token = get_token();
+            match(void_symbol);
+            match(id);
+            match(lparn_symbol);
+            match(rparn_symbol);
+            match (lcurly_bracket);
 			program();
-			match(end_source_sy);
+			match(end_source_symbol);
 
 		}
 
-		//<program> ::= int  id  = <expr-seq> |  cout  << <expr-seq> | int  id  = <expr-seq>
+		//<program> ::= int  id  = <expr-seq> ;|  cout  << <expr-seq> ;| int  id  = <expr-seq>;
 
 		void program(){
-			if(curr_token == int_symbol){ //1
-				match(int_symbol);
+			if(curr_token == int_symbol){
+                cout<<"******************"<<endl;
+                match(int_symbol);
                 match(id);
 				match(equal_symbol);
 				expr_seq();
+                match(semicolon_symbol);
 
                 program();
 			}
             else if(curr_token == float_symbol){ //2
+                cout<<"******************"<<endl;
                 match(float_symbol);
                 match(id);
                 match(equal_symbol);
                 expr_seq();
+                match(semicolon_symbol);
+
                 program();
             }
 			else if(curr_token == cout_symbol){ //3
-				match(cout_symbol);
-				match(cout_op_sy);
+
+                cout<<"******************"<<endl;
+                match(cout_symbol);
+				match(cout_op_symbol);
 				expr_seq();
+                match(semicolon_symbol);
+
                 program();
 			}
-            else if(curr_token == end_source_sy){
-                match(end_source_sy);
+            else if(curr_token == rcurly_bracket){
+                match(rcurly_bracket);
+                match(end_source_symbol);
             }
 			else
 				syntax_error(curr_token);
@@ -206,7 +236,7 @@ class parser{
 
 		void expr_seq(){
 			expr();
-			while(curr_token == id || curr_token == num ||  curr_token == lparn_sy || curr_token == rparn_sy ||  curr_token == Addop || curr_token == multop  ){
+			while(curr_token == id || curr_token == num ||  curr_token == lparn_symbol || curr_token == rparn_symbol ||  curr_token == Addop || curr_token == multop  ){
 				expr();
 			}
 		}
@@ -218,25 +248,26 @@ class parser{
 			switch(curr_token){
 				case id: match(id); break;
 				case num : match(num);break;
-				case lparn_sy:
-					match (lparn_sy);
+				case lparn_symbol:
+					match (lparn_symbol);
 					if (curr_token == num){  
                         match(num);
 						if (curr_token==Addop){
                         match (Addop);
 						expr_seq();
-						match(rparn_sy);
+						match(rparn_symbol);
                         }
                         else if (curr_token == multop ){
                             match (multop);
                             expr_seq();
-                            match(rparn_sy);
+                            match(rparn_symbol);
                         }
 					}
                     else{
 						syntax_error(curr_token);
 					}
-
+                case rparn_symbol:
+                    match (rparn_symbol);
 					break;
 
 
